@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html>
+	<head>
+		<title>Live Phoenix</title>
+	</head>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+	<script src="jquery.js"></script>
+	<script type='text/javascript'>
+		$(document).ready(function(){
+   			function setRandomQuestion(){
+   	    		var questions =new Array("what are you passionate about",
+   	    													 "what is your club doing",
+   	    													 "what interests you",
+   	    													 "what are you working on",
+   	    													 "why are you happy today",
+   	    													 "what makes olin awesome");  
+   	    		$(".q").text(questions[Math.floor(Math.random() * questions.length)]);
+   	    }
+   	    
+   	    setInterval(setRandomQuestion, 3000);
+   	 });
+	</script>
+	<body>
+		<div id="header">
+			<div id="instructions">
+				<span id="bird_icon"></span>Tweet with #livephoenix
+			</div>
+			
+			<div id="questions">
+		  	<span class="q">foo</span>?
+			</div>
+		</div>
+		
+		<div id="cards">
+			<div class="card">
+				<div class="author_info">
+					<div class="avatar">
+						<span class="frame"></span>
+						<img class="profile_pic" src="http://gmaenterprises.com/SMP/wp-content/uploads/2012/04/new-default-twitter-avatar.jpg" alt="avatar" />
+					</div>
+					<p class="name">I&ntilde;igo Beitia</p>
+					<p class="handle">@ibeitia</p>
+					<p class="timestamp">28 minutes ago</p>
+				</div>
+				<div class="tweet">
+					Loren ipsum dolor sit. #livephoenix
+				</div>
+			</div>
+		</div>
+		
+		<div id="footer">
+			<span id="pointy"></span>
+			Wordcloud
+		</div>
+	</body>
+</html>

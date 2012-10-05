@@ -1,0 +1,137 @@
+body {
+	margin: 0;
+	font-family: "Helvetica Neue", Helvetica, Arial, Helvetica, Geneva, sans-serif;
+	background: url(images/cards_bg.png) repeat;
+}
+
+#bird_icon {
+	width: 39px;
+	height: 24px;
+	display: inline-block;
+	background: url(images/bird.png) no-repeat;
+	padding-right: 10px;
+}
+
+div.card {
+	display: block;
+	background: url(images/card_bg.png) no-repeat;
+	width: 608px;
+	height: 400px;
+	margin-left: auto ;
+	margin-right: auto ;
+}
+
+.frame {
+	background: url(images/avatar_frame.png) no-repeat;
+	position: absolute;
+	height: 201px;
+	width: 201px;
+}
+
+img.profile_pic {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px; /* border radius */
+		
+	width: 200px;
+	height: 200px;
+}
+
+div.author_info {
+	padding: 22px;
+	width: 201px;
+	float: left;
+}
+
+#cards div.card div.author_info p.name {
+	color: #354155; /* text color */
+	
+	
+	
+	text-shadow: 0 1px 0 #fff; /* drop shadow */
+	
+	font: bold 24px "Helvetica Neue";
+	margin: 10px 0 0;
+}
+
+#cards div.card div.author_info p.timestamp {
+	color: #878787; /* text color */
+	
+	
+	
+	text-shadow: 0 1px 0 #fff; /* drop shadow */
+	
+	font: bold 18px "Helvetica Neue";
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	position: absolute;
+	top: 490px;
+}
+
+div.tweet {
+	color: #354155; /* text color */
+	
+	
+	
+	text-shadow: 0 1px 0 rgba(255,255,255,.75); /* drop shadow */
+		
+	display: block;
+	font: bold 30px "Helvetica Neue";
+	overflow: hidden;
+	height: 355px;
+	width: 317px;
+	padding: 20px;
+}
+
+#cards div.card div.author_info p.handle {
+	color: #878787; /* text color */
+	
+	
+	
+	text-shadow: 0 1px 0 #fff; /* drop shadow */
+	
+	font: bold 20px "Helvetica Neue";
+	margin: 0;
+}
+
+#header {
+	color: #fff; /* text color */
+	text-shadow: 0 2px 0 rgba(0,0,0,.4); /* drop shadow */
+	font: bold 30px "Helvetica Neue";
+	background: url(images/header_bg.png) repeat-x;
+	height: 118px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 35px;
+}
+
+#instructions {
+	float: left;
+}
+
+#questions {
+	float: right;
+	text-align: right;
+}
+
+#footer {
+	width: 100%;
+	text-align: center;
+	background-image: url(images/footer.png);
+	height: 15%;
+	padding-top: 30px;
+	position: absolute;
+	bottom: 0;
+}
+
+#pointy {
+	background-image: url(images/pointy.png);
+	width: 28px;
+	height: 23px;
+	margin-left: auto ;
+	margin-right: auto ;
+	display: block;
+	position: relative;
+	top: -30px;
+}
