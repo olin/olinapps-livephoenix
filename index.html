@@ -3,9 +3,13 @@
 		<title>Live Phoenix</title>
 	</head>
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-	<script src="jquery.js"></script>
+	<script src="lib/jquery.js"></script>
+  <script src="lib/d3.v2.min.js"></script>
+  <script src="lib/d3.layout.cloud.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
+        var wordCloudList = [];
+
    			function setRandomQuestion(){
    	    		var questions =new Array("what are you passionate about",
    	    													 "what is your club doing",
@@ -17,7 +21,133 @@
    	    }
    	    
    	    setInterval(setRandomQuestion, 3000);
-   	 });
+   	 
+        var CardDeck = function(anchor){
+          this.anchor = anchor;
+          this.minPos = -416;
+          this.maxPos = -416;
+          var rotationSize = 916;
+          this.firstIndex = 0;
+          this.cards = new Array();
+
+          this.rotateCards = function(){
+            var that = this;
+            // add everything by the rotation size each time
+            this.cards.forEach(function(card, index){
+              // rotate the first card to the back
+              if (index == that.firstIndex) {
+                // console.log("rotated to back", that.maxPos);
+                card.updatePosition(that.maxPos);
+              } else {
+                // console.log(that.firstIndex, that.cards.length, index);
+                if (that.firstIndex == that.cards.length && index == 0) {
+                  // console.log("card is first", card);
+                  that.firstIndex = -1;
+                }
+
+                card.updatePosition(card.position-rotationSize);
+              } 
+            });
+            that.firstIndex += 1;
+          }
+
+          this.addCard = function(card){
+            if (this.cards.length == 0){
+              card.isFirst = true;
+            }
+            card.create(this.anchor);
+            card.updatePosition(this.maxPos);
+            this.cards.push(card);
+            this.maxPos += rotationSize;
+          }
+
+          this.removeCard = function(position){
+            this.cards.splice(position, 1);
+          }
+        }
+
+
+        var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
+          this.obj;
+
+          this.position = 0;
+          this.updatePosition = function(position){
+            this.position = position;
+            console.log(this.position);
+            this.obj.css('margin-left', this.position);
+          }
+
+          this.create = function(anchor){
+            this.obj = ($('<div>')
+              .attr('class', 'card').css('margin-left', 0 )).append($('<div>')
+                .attr('class', 'author_info').append($('<div>')
+                  .attr('class', 'avatar').append($('<span>')
+                    .attr('class', 'frame'))
+                  .append($('<img>').attr('class', 'profile_pic').attr('src', profile_image_url)
+                    )
+                  )
+                .append($('<p>').attr('class', 'name').text(from_user_name))
+                .append($('<p>').attr('class', 'handle').text("@"+from_user))
+                .append($('<p>').attr('class', 'timestamp').text("28 min ago")))
+              .append($('<div>').attr('class', 'tweet').text(text));
+            anchor.append(this.obj);
+          }
+        }
+
+        var cards = new CardDeck($('#cards'));
+        // fetching api
+        $.get('http://search.twitter.com/search.json?rpp=100&q=@jialiya', 
+          function(data){
+            var tweets = data.results;
+            tweets.forEach(function(tweet, index){
+              // create a card for each one
+              var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url);
+              
+              wordCloudList = wordCloudList.concat(tweet.text.split(" "));
+              console.log(wordCloudList);
+              cards.addCard(card);
+            });
+            generateWordCloud();
+          }, 'json');
+
+        setInterval(function() {cards.rotateCards()}, 1000);
+
+        function generateWordCloud() {
+          // word cloud
+          var color = d3.scale.category20b();
+
+          var width = 1000;
+          var height = 200;
+          d3.layout.cloud().size([width, height])
+            .words(
+              wordCloudList.map(function(d) {
+              return {text: d, size: 10 + Math.random() * 90};
+            }))
+            .rotate(function() { return 0;}) // ~~(Math.random() * 2) * 90;
+            .fontSize(function(d) { return d.size; })
+            .padding(1)
+            .on("end", draw)
+            .start();
+
+          function draw(words) {
+            d3.select("#wordcloud").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+              .append("g")
+                .attr("transform", "translate("+width/2+","+height/2+")")
+              .selectAll("text")
+                .data(words)
+              .enter().append("text")
+                .style("font-size", function(d) { return d.size + "px"; })
+                .style("fill", function(d) { return color(d.text.toLowerCase()); })
+                .attr("text-anchor", "middle")
+                .attr("transform", function(d) {
+                  return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function(d) { return d.text; });
+          }
+        }
+     });
 	</script>
 	<body>
 		<div id="header">
@@ -31,25 +161,12 @@
 		</div>
 		
 		<div id="cards">
-			<div class="card">
-				<div class="author_info">
-					<div class="avatar">
-						<span class="frame"></span>
-						<img class="profile_pic" src="http://gmaenterprises.com/SMP/wp-content/uploads/2012/04/new-default-twitter-avatar.jpg" alt="avatar" />
-					</div>
-					<p class="name">I&ntilde;igo Beitia</p>
-					<p class="handle">@ibeitia</p>
-					<p class="timestamp">28 minutes ago</p>
-				</div>
-				<div class="tweet">
-					Loren ipsum dolor sit. #livephoenix
-				</div>
-			</div>
 		</div>
 		
 		<div id="footer">
 			<span id="pointy"></span>
-			Wordcloud
+      <div id="wordcloud">
+      </div>
 		</div>
 	</body>
 </html>
