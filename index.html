@@ -89,10 +89,29 @@
         }
         var cards = new CardDeck($('#cards'));
 
-
+				$.getRelativeTime = function(diff) {
+				  var v = Math.floor(diff / 86400); diff -= v * 86400;
+				  if (v > 0) return (v == 1 ? 'Yesterday' : v + ' days ago');
+				  v = Math.floor(diff / 3600); diff -= v * 3600;
+				  if (v > 0) return v + ' hour' + (v > 1 ? 's' : '') + ' ago';
+				  v = Math.floor(diff / 60); diff -= v * 60;
+				  if (v > 0) return v + ' minute' + (v > 1 ? 's' : '') + ' ago';
+				  return 'Just now';
+				};
+				
+				$.fn.toRelativeTime = function() {
+				  var t = $(this), x = Math.round(Date.parse(t.text()) / 1000);
+				  if (x) t.text($.getRelativeTime(Math.round(
+				  new Date().getTime() / 1000) - x));
+				};
+				
+				$.toRelativeTime = function(s) { $(s).each(function() { 
+				  $(this).toRelativeTime(); 
+				}); };
+				
         var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
           this.obj;
-
+					
           this.position = 0;
           this.updatePositionWithAnimation = function(position){
             this.position = position;
@@ -120,7 +139,7 @@
                   )
                 .append($('<p>').attr('class', 'name').text(from_user_name))
                 .append($('<p>').attr('class', 'handle').text("@"+from_user))
-                .append($('<p>').attr('class', 'timestamp').text("28 min ago")))
+                .append($('<p>').attr('class', 'timestamp').text(created_at)))
               .append($('<div>').attr('class', 'tweet').text(text));
             anchor.append(this.obj);
           }
@@ -234,5 +253,13 @@
       <div id="wordcloud">
       </div>
 		</div>
+		<script>
+		$(function() {
+		  $('.timestamp').toRelativeTime();
+		  
+		  // Shortcut for multiple timestamps (call it with a selector)
+		  // $.toRelativeTime('.post .timestamp');
+		});
+		</script>
 	</body>
 </html>
