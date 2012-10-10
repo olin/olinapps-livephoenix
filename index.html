@@ -13,7 +13,7 @@
 	<script type='text/javascript'>
 		$(document).ready(function(){
         var searchType = "%23"; //%40 for @, %23 for #
-        var searchParam = "lol";
+        var searchParam = "david";
         var numToCycle = 10;
         var wordCloudList = [];
         
@@ -103,7 +103,7 @@
           }
           this.firstCardSmoothTransition = function(position){
             this.position = position;
-            this.obj.animate({'margin-left': -914},1500,function(that) {return function(){
+            this.obj.animate({'margin-left': -914},800,function(that) {return function(){
                 that.obj.css('margin-left', position);
             }}(this));
           }
