@@ -46,6 +46,7 @@ div.author_info {
 
 #cards {
 	margin: auto;
+	padding-top: 50px;
 }
 
 #cards div.card div.author_info p.name {
