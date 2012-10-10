@@ -69,6 +69,8 @@ div.author_info {
 	
 	font: bold 36px "Helvetica Neue";
 	bottom: 10px;
+	display: inline-block;
+	position: absolute;
 }
 
 div.tweet {

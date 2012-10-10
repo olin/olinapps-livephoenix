@@ -8,7 +8,7 @@
   <script src="js/jquery-ui-1.9.0.custom.js"></script>
   <script src="lib/d3.v2.min.js"></script>
   <script src="lib/d3.layout.cloud.js"></script>
-
+<script src="lib/jquery.timeago.js" type="text/javascript"></script>
   <script src="lib/jqcloud-1.0.2.min.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
@@ -18,7 +18,7 @@
         var wordCloudList = [];
         
         window.questions = ["what are you passionate about?",
-   	    										"what is your club doing?",
+        										"what is your club doing?",
    	    										"what interests you?",
    	    										"what are you working on?",
    	    										"why are you happy today?",
@@ -56,6 +56,7 @@
           this.cards = new Array();
 
           this.rotateCards = function(){
+          	
             var that = this;
             // add everything by the rotation size each time
             this.cards.forEach(function(card, index){
@@ -89,26 +90,6 @@
         }
         var cards = new CardDeck($('#cards'));
 
-				$.getRelativeTime = function(diff) {
-				  var v = Math.floor(diff / 86400); diff -= v * 86400;
-				  if (v > 0) return (v == 1 ? 'Yesterday' : v + ' days ago');
-				  v = Math.floor(diff / 3600); diff -= v * 3600;
-				  if (v > 0) return v + ' hour' + (v > 1 ? 's' : '') + ' ago';
-				  v = Math.floor(diff / 60); diff -= v * 60;
-				  if (v > 0) return v + ' minute' + (v > 1 ? 's' : '') + ' ago';
-				  return 'Just now';
-				};
-				
-				$.fn.toRelativeTime = function() {
-				  var t = $(this), x = Math.round(Date.parse(t.text()) / 1000);
-				  if (x) t.text($.getRelativeTime(Math.round(
-				  new Date().getTime() / 1000) - x));
-				};
-				
-				$.toRelativeTime = function(s) { $(s).each(function() { 
-				  $(this).toRelativeTime(); 
-				}); };
-				
         var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
           this.obj;
 					
@@ -139,14 +120,15 @@
                   )
                 .append($('<p>').attr('class', 'name').text(from_user_name))
                 .append($('<p>').attr('class', 'handle').text("@"+from_user))
-                .append($('<p>').attr('class', 'timestamp').text(created_at)))
+                .append($('<p>').attr('class', 'timestamp').text(jQuery.timeago(created_at))))
               .append($('<div>').attr('class', 'tweet').text(text));
             anchor.append(this.obj);
           }
+          
         }
 
         cards = new CardDeck($('#cards'));
-
+				
         // fetching api
         $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+searchType+searchParam, 
           function(data){
