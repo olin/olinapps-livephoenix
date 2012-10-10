@@ -7,8 +7,8 @@ body {
 }
 
 #bird_icon {
-	width: 39px;
-	height: 24px;
+	width: 78px;
+	height: 48px;
 	display: inline-block;
 	background: url(images/bird.png) no-repeat;
 	padding-right: 10px;
@@ -100,12 +100,12 @@ div.tweet {
 #header {
 	color: #fff; /* text color */
 	text-shadow: 0 2px 0 rgba(0,0,0,.4); /* drop shadow */
-	font: bold 30px "Helvetica Neue";
+	font: bold 60px "Helvetica Neue";
 	background: url(images/header_bg.png) repeat-x;
-	height: 118px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 35px;
+	height: 236px;
+	padding-left: 40px;
+	padding-right: 40px;
+	padding-top: 70px;
 }
 
 #instructions {
