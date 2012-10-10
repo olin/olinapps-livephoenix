@@ -12,9 +12,9 @@
   <script src="lib/jqcloud-1.0.2.min.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
-        var searchType = "@"; //%40
-        var searchParam = "jialiya";
-        var numToCycle = 5;
+        var searchType = "#"; //%40
+        var searchParam = "livephoenix";
+        var numToCycle = 10;
         var wordCloudList = [];
         
         window.questions = ["what are you passionate about?",
@@ -37,7 +37,7 @@
                 flipUp = !flipUp; // Alternating flipping direction
             }
         
-            var interval = 4e3; // 2 seconds
+            var interval = 4e3; // 4 seconds
             var flipUp = true;
             var index = 0;
             var maxIndex = window.questions.length - 1;
@@ -179,7 +179,7 @@
           }
         }
 
-        setInterval(function() {cards.rotateCards()}, 1000);
+        setInterval(function() {cards.rotateCards()}, 5000);
 
         // function generateWordCloud() {
         //   $(function() {
@@ -246,20 +246,6 @@
 		
 		<div id="cards">
 		</div>
-		
-		<div id="footer">
-			<span id="pointy"></span>
-      <!-- <div id="wordcloud" style="width: 1300px; height: 150px;"></div> -->
-      <div id="wordcloud">
-      </div>
-		</div>
-		<script>
-		$(function() {
-		  $('.timestamp').toRelativeTime();
-		  
-		  // Shortcut for multiple timestamps (call it with a selector)
-		  // $.toRelativeTime('.post .timestamp');
-		});
-		</script>
+
 	</body>
 </html>
