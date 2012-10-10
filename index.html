@@ -95,7 +95,7 @@
           this.position = 0;
           this.updatePositionWithAnimation = function(position){
             this.position = position;
-            this.obj.animate({'margin-left': this.position},500);
+            this.obj.animate({'margin-left': this.position},1500);
           }
           this.updatePosition = function(position){
             this.position = position;
@@ -103,7 +103,7 @@
           }
           this.firstCardSmoothTransition = function(position){
             this.position = position;
-            this.obj.animate({'margin-left': -914},500,function(that) {return function(){
+            this.obj.animate({'margin-left': -914},1500,function(that) {return function(){
                 that.obj.css('margin-left', position);
             }}(this));
           }
