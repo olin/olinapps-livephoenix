@@ -3,12 +3,18 @@
 		<title>Live Phoenix</title>
 	</head>
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="jqcloud.css" media="screen" />
 	<script src="lib/jquery.js"></script>
   <script src="js/jquery-ui-1.9.0.custom.js"></script>
   <script src="lib/d3.v2.min.js"></script>
   <script src="lib/d3.layout.cloud.js"></script>
+
+  <script src="lib/jqcloud-1.0.2.min.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
+        var searchType = "@"; //%40
+        var searchParam = "jialiya";
+        var numToCycle = 5;
         var wordCloudList = [];
         
         window.questions = ["what are you passionate about?",
@@ -17,29 +23,29 @@
    	    										"what are you working on?",
    	    										"why are you happy today?",
    	    										"what makes olin awesome?"];
-		        
-		        function flipText(newText) {
-		            flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
-		                direction: "down"
-		            }, 300), $("#new-text").show("drop", {
-		                direction: "up"
-		            }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
-		                direction: "up"
-		            }, 300), $("#new-text").hide("drop", {
-		                direction: "down"
-		            }, 300));
-		            flipUp = !flipUp; // Alternating flipping direction
-		        }
-		    
-		        var interval = 4e3; // 2 seconds
-		        var flipUp = true;
-		        var index = 0;
-		        var maxIndex = window.questions.length - 1;
-		        setInterval(function() {
-		            var nextText = window.questions[index];
-		            flipText(nextText);
-		            index = (index == maxIndex) ? 0 : index + 1;
-		         }, interval);
+            
+            function flipText(newText) {
+                flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
+                    direction: "down"
+                }, 300), $("#new-text").show("drop", {
+                    direction: "up"
+                }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
+                    direction: "up"
+                }, 300), $("#new-text").hide("drop", {
+                    direction: "down"
+                }, 300));
+                flipUp = !flipUp; // Alternating flipping direction
+            }
+        
+            var interval = 4e3; // 2 seconds
+            var flipUp = true;
+            var index = 0;
+            var maxIndex = window.questions.length - 1;
+            setInterval(function() {
+                var nextText = window.questions[index];
+                flipText(nextText);
+                index = (index == maxIndex) ? 0 : index + 1;
+             }, interval);
    	 
         var CardDeck = function(anchor){
           this.anchor = anchor;
@@ -56,15 +62,12 @@
               // rotate the first card to the back
               console.log(index,that.firstIndex)
               if (index == that.firstIndex) {
-//                console.log("rotated to back", that.maxPos-rotationSize);
                 card.updatePosition(that.maxPos-rotationSize);
               } else {
-                // console.log(that.firstIndex, that.cards.length, index);
                 card.updatePosition(card.position-rotationSize);
               }
             });
             if (that.firstIndex == (that.cards.length-1)) {
-              // console.log("card is first", card);
               that.firstIndex = -1;
             }
             that.firstIndex += 1;
@@ -85,6 +88,7 @@
             this.cards.splice(position, 1);
           }
         }
+        var cards = new CardDeck($('#cards'));
 
 
         var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
@@ -93,7 +97,6 @@
           this.position = 0;
           this.updatePosition = function(position){
             this.position = position;
-//            console.log(this.position);
             this.obj.css('margin-left', this.position);
           }
 
@@ -115,37 +118,66 @@
         }
 
         cards = new CardDeck($('#cards'));
+
         // fetching api
-        $.get('http://search.twitter.com/search.json?rpp=100&q=@ibeitia',
+        $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+searchType+searchParam, 
           function(data){
             var tweets = data.results;
             tweets.forEach(function(tweet, index){
               // create a card for each one
-              var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url);
-              
-              wordCloudList = wordCloudList.concat(tweet.text.split(" "));
-//              console.log(wordCloudList);
+              var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
+
+              wordCloudList = wordCloudList.filter(function(element, index, array) {
+                return index==array.indexOf(element) && element != searchType+searchParam;
+              });
+              console.log(wordCloudList);
               cards.addCard(card);
             });
-            generateWordCloud();
+            // generateWordCloud();
           }, 'json');
+
+        var ColorCycle = function(){
+          var colors = ['#545454', '#636363', '#707070', '#808080'];
+          var index = 1;
+
+          this.getColor = function() {
+            var color = colors[index-1];
+            if (index == colors.length) {
+              index = 1;
+            } else {
+              index++;
+            }
+            return color;
+          }
+        }
 
         setInterval(function() {cards.rotateCards()}, 1000);
 
+        // function generateWordCloud() {
+        //   $(function() {
+        //     $("#wordcloud").jQCloud(wordCloudList.map(function(element){
+        //       return {text: element, weight: Math.random() * 10};
+        //     }), {shape: "rectangular"});
+        //   });
+        // }
+
         function generateWordCloud() {
           // word cloud
-          var color = d3.scale.category20b();
-
-          var width = 1000;
-          var height = 200;
+          var color = new ColorCycle();
+          var wordCloudList = ["Hello", "world", "normally", "you", "want", "more", "words",
+        "than", "this", "Hello", "world", "normally", "you", "want", "more", "words",
+        "than"];
+          var width = 1400;
+          var height = 150;
           d3.layout.cloud().size([width, height])
+            // .text(function(d) { return d.key; })
+            // .size(function(d) { return 10; })
             .words(
               wordCloudList.map(function(d) {
-              return {text: d, size: 10 + Math.random() * 90};
+              return {text: d, size: 30};
             }))
             .rotate(function() { return 0;}) // ~~(Math.random() * 2) * 90;
             .fontSize(function(d) { return d.size; })
-            .padding(1)
             .on("end", draw)
             .start();
 
@@ -154,12 +186,13 @@
                 .attr("width", width)
                 .attr("height", height)
               .append("g")
-                .attr("transform", "translate("+width/2+","+height/2+")")
+                .attr("transform", "translate("+width/2+","+(height/2+10)+")")
               .selectAll("text")
                 .data(words)
               .enter().append("text")
+                // .style("font-family", function(d) {return "Impact"} )
                 .style("font-size", function(d) { return d.size + "px"; })
-                .style("fill", function(d) { return color(d.text.toLowerCase()); })
+                .style("fill", function(d) { return color.getColor(); })
                 .attr("text-anchor", "middle")
                 .attr("transform", function(d) {
                   return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
@@ -188,6 +221,7 @@
 		
 		<div id="footer">
 			<span id="pointy"></span>
+      <!-- <div id="wordcloud" style="width: 1300px; height: 150px;"></div> -->
       <div id="wordcloud">
       </div>
 		</div>
