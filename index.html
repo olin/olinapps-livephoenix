@@ -60,11 +60,11 @@
             // add everything by the rotation size each time
             this.cards.forEach(function(card, index){
               // rotate the first card to the back
-              console.log(index,that.firstIndex)
+//              console.log(index,that.firstIndex)
               if (index == that.firstIndex) {
-                card.updatePosition(that.maxPos-rotationSize);
+                card.firstCardSmoothTransition(that.maxPos-rotationSize);
               } else {
-                card.updatePosition(card.position-rotationSize);
+                card.updatePositionWithAnimation(card.position-rotationSize);
               }
             });
             if (that.firstIndex == (that.cards.length-1)) {
@@ -78,7 +78,6 @@
               card.isFirst = true;
             }
             card.create(this.anchor);
-            console.log(this.maxPos);
             card.updatePosition(this.maxPos);
             this.cards.push(card);
             this.maxPos += rotationSize;
@@ -95,9 +94,19 @@
           this.obj;
 
           this.position = 0;
+          this.updatePositionWithAnimation = function(position){
+            this.position = position;
+            this.obj.animate({'margin-left': this.position},500);
+          }
           this.updatePosition = function(position){
             this.position = position;
             this.obj.css('margin-left', this.position);
+          }
+          this.firstCardSmoothTransition = function(position){
+            this.position = position;
+            this.obj.animate({'margin-left': -914},500,function(that) {return function(){
+                that.obj.css('margin-left', position);
+            }}(this));
           }
 
           this.create = function(anchor){
@@ -130,7 +139,7 @@
               wordCloudList = wordCloudList.filter(function(element, index, array) {
                 return index==array.indexOf(element) && element != searchType+searchParam;
               });
-              console.log(wordCloudList);
+//              console.log(wordCloudList);
               cards.addCard(card);
             });
             // generateWordCloud();
