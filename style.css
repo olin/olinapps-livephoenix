@@ -44,6 +44,10 @@ div.author_info {
 	float: left;
 }
 
+#cards {
+	margin: auto;
+}
+
 #cards div.card div.author_info p.name {
 	color: #354155; /* text color */
 	
@@ -63,10 +67,13 @@ div.author_info {
 	text-shadow: 0 1px 0 #fff; /* drop shadow */
 	
 	font: bold 18px "Helvetica Neue";
+<<<<<<< HEAD
 	margin-bottom: 0;
 	margin-left: 0;
 	margin-right: 0;
 	/*position: absolute;*/
+=======
+>>>>>>> CSS fix.
 	top: 490px;
 }
 
@@ -114,6 +121,8 @@ div.tweet {
 #questions {
 	float: right;
 	text-align: right;
+	font-weight: normal;
+	font-style: normal;
 }
 
 #footer {
@@ -135,4 +144,18 @@ div.tweet {
 	display: block;
 	position: relative;
 	top: -30px;
+}
+
+#dynamic-text-wrapper {
+    display:inline-block;
+    position:relative;
+    height:30px;
+}
+#old-text, #new-text {
+    position:absolute;
+    display:block;
+}
+#new-text { display:none; }
+#dynamic-text-wrapper, #old-text, #new-text {
+    width:600px;
 }

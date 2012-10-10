@@ -4,23 +4,42 @@
 	</head>
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 	<script src="lib/jquery.js"></script>
+  <script src="js/jquery-ui-1.9.0.custom.js"></script>
   <script src="lib/d3.v2.min.js"></script>
   <script src="lib/d3.layout.cloud.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
         var wordCloudList = [];
-
-   			function setRandomQuestion(){
-   	    		var questions =new Array("what are you passionate about",
-   	    													 "what is your club doing",
-   	    													 "what interests you",
-   	    													 "what are you working on",
-   	    													 "why are you happy today",
-   	    													 "what makes olin awesome");  
-   	    		$(".q").text(questions[Math.floor(Math.random() * questions.length)]);
-   	    }
-   	    
-   	    setInterval(setRandomQuestion, 3000);
+        
+        window.questions = ["what are you passionate about?",
+   	    										"what is your club doing?",
+   	    										"what interests you?",
+   	    										"what are you working on?",
+   	    										"why are you happy today?",
+   	    										"what makes olin awesome?"];
+		        
+		        function flipText(newText) {
+		            flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
+		                direction: "down"
+		            }, 300), $("#new-text").show("drop", {
+		                direction: "up"
+		            }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
+		                direction: "up"
+		            }, 300), $("#new-text").hide("drop", {
+		                direction: "down"
+		            }, 300));
+		            flipUp = !flipUp; // Alternating flipping direction
+		        }
+		    
+		        var interval = 4e3; // 2 seconds
+		        var flipUp = true;
+		        var index = 0;
+		        var maxIndex = window.questions.length - 1;
+		        setInterval(function() {
+		            var nextText = window.questions[index];
+		            flipText(nextText);
+		            index = (index == maxIndex) ? 0 : index + 1;
+		         }, interval);
    	 
         var CardDeck = function(anchor){
           this.anchor = anchor;
@@ -97,7 +116,7 @@
 
         cards = new CardDeck($('#cards'));
         // fetching api
-        $.get('http://search.twitter.com/search.json?rpp=100&q=@jialiya',
+        $.get('http://search.twitter.com/search.json?rpp=100&q=@ibeitia',
           function(data){
             var tweets = data.results;
             tweets.forEach(function(tweet, index){
@@ -157,7 +176,10 @@
 			</div>
 			
 			<div id="questions">
-		  	<span class="q">foo</span>?
+		  	<span id="dynamic-text-wrapper">
+		  	        <span id="old-text"></span>
+		  	        <span id="new-text"></span>
+		  	 </span>
 			</div>
 		</div>
 		
