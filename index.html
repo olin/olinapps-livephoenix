@@ -14,7 +14,7 @@
 		$(document).ready(function(){
         var searchType = "%23"; //%40 for @, %23 for #
         var searchParam = "david";
-        var numToCycle = 10;
+        var numToCycle = 20;
         var wordCloudList = [];
         
         window.questions = ["what is your club doing?",
@@ -63,8 +63,12 @@
 //              console.log(index,that.firstIndex)
               if (index == that.firstIndex) {
                 card.firstCardSmoothTransition(that.maxPos-rotationSize);
-              } else {
+              } else if (index == ((that.firstIndex + 1)%(this.cards.length)) ||
+                index == ((that.firstIndex + 2)%(this.cards.length)) ||
+                index == ((that.firstIndex + 3)%(this.cards.length)){
                 card.updatePositionWithAnimation(card.position-rotationSize);
+              }else {
+                card.updatePosition(card.position-rotationSize);
               }
             });
             if (that.firstIndex == (that.cards.length-1)) {
