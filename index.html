@@ -8,22 +8,10 @@
   <script src="js/jquery-ui-1.9.0.custom.js"></script>
   <script src="lib/d3.v2.min.js"></script>
   <script src="lib/d3.layout.cloud.js"></script>
-<script src="lib/jquery.timeago.js" type="text/javascript"></script>
+
   <script src="lib/jqcloud-1.0.2.min.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
-<<<<<<< HEAD
-        var searchType = "%23"; //%40 for @, %23 for #
-        var searchParam = "david";
-        var numToCycle = 20;
-        var wordCloudList = [];
-        
-        window.questions = ["what is your club doing?",
-   	    										"what interests you?",
-   	    										"what are you working on?",
-   	    										"why are you happy today?",
-   	    										"what makes olin awesome?"];
-=======
         var searchType = "%23"; //%40
         var searchParam = "@jack";
         var numToCycle = 5;
@@ -35,7 +23,6 @@
                             "what are you working on?",
                             "why are you happy today?",
                             "what makes olin awesome?"];
->>>>>>> master
             
         function flipText(newText) {
           flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
@@ -62,39 +49,20 @@
    	 
         var CardDeck = function(anchor){
           this.anchor = anchor;
-<<<<<<< HEAD
-          this.minPos = -1000;
-          this.maxPos = -1000;
-          var rotationSize = 1300;
-=======
           this.minPos = -416;
           this.maxPos = -1332;
           var rotationSize = 916;
->>>>>>> master
           this.firstIndex = 0;
           this.cards = new Array();
 
           this.rotateCards = function(){
-          	
             var that = this;
             // add everything by the rotation size each time
             this.cards.forEach(function(card, index){
               // rotate the first card to the back
 //              console.log(index,that.firstIndex)
-<<<<<<< HEAD
-              if (index == that.firstIndex) {
-                card.firstCardSmoothTransition(that.maxPos-rotationSize);
-              } else if (index == ((that.firstIndex + 1)%(this.cards.length)) ||
-                index == ((that.firstIndex + 2)%(this.cards.length)) ||
-                index == ((that.firstIndex + 3)%(this.cards.length)){
-                card.updatePositionWithAnimation(card.position-rotationSize);
-              }else {
-                card.updatePosition(card.position-rotationSize);
-              }
-=======
                  console.log(card.text);
                 card.updatePositionWithAnimation(card.position-rotationSize);
->>>>>>> master
             });
               that.removeCard(0);
               if (that.firstIndex == (that.cards.length-1)) {
@@ -126,9 +94,6 @@
             }
           }
         }
-<<<<<<< HEAD
-        var cards = new CardDeck($('#cards'));
-=======
         cardDeck = new CardDeck($('#cards'));
         cardQueue = [];
 
@@ -151,7 +116,6 @@
         $.toRelativeTime = function(s) { $(s).each(function() { 
           $(this).toRelativeTime(); 
         }); };
->>>>>>> master
 
         var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
           this.obj;
@@ -159,7 +123,7 @@
           this.position = 0;
           this.updatePositionWithAnimation = function(position){
             this.position = position;
-            this.obj.animate({'margin-left': this.position},1500);
+            this.obj.animate({'margin-left': this.position},500);
           }
           this.updatePosition = function(position){
             this.position = position;
@@ -167,7 +131,7 @@
           }
           this.firstCardSmoothTransition = function(position){
             this.position = position;
-            this.obj.animate({'margin-left': -914},800,function(that) {return function(){
+            this.obj.animate({'margin-left': -914},500,function(that) {return function(){
                 that.obj.css('margin-left', position);
             }}(this));
           }
@@ -183,17 +147,12 @@
                   )
                 .append($('<p>').attr('class', 'name').text(from_user_name))
                 .append($('<p>').attr('class', 'handle').text("@"+from_user))
-                .append($('<p>').attr('class', 'timestamp').text(jQuery.timeago(created_at))))
+                .append($('<p>').attr('class', 'timestamp').text(created_at)))
               .append($('<div>').attr('class', 'tweet').text(text));
             anchor.append(this.obj);
           }
-          
         }
 
-<<<<<<< HEAD
-        cards = new CardDeck($('#cards'));
-				
-=======
         function addCards() {
           $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+ searchType+searchParam, 
               function(data){
@@ -213,7 +172,6 @@
         }
         addCards();
 
->>>>>>> master
         // fetching api
         function fetch() {
           $.get('http://search.twitter.com/search.json?rpp='+10+'&q='+searchType+searchParam,
@@ -242,57 +200,6 @@
             }, 'json');
         }
 
-<<<<<<< HEAD
-        setInterval(function() {cards.rotateCards()}, 5000);
-
-        // function generateWordCloud() {
-        //   $(function() {
-        //     $("#wordcloud").jQCloud(wordCloudList.map(function(element){
-        //       return {text: element, weight: Math.random() * 10};
-        //     }), {shape: "rectangular"});
-        //   });
-        // }
-
-//        function generateWordCloud() {
-          // word cloud
-//          var color = new ColorCycle();
-//          var wordCloudList = ["Hello", "world", "normally", "you", "want", "more", "words",
-//        "than", "this", "Hello", "world", "normally", "you", "want", "more", "words",
-//        "than"];
-//          var width = 1400;
-//          var height = 150;
-//          d3.layout.cloud().size([width, height])
-            // .text(function(d) { return d.key; })
-            // .size(function(d) { return 10; })
-//            .words(
-//              wordCloudList.map(function(d) {
-//              return {text: d, size: 30};
-//            }))
-//            .rotate(function() { return 0;}) // ~~(Math.random() * 2) * 90;
-//            .fontSize(function(d) { return d.size; })
-//            .on("end", draw)
-//            .start();
-//
-//          function draw(words) {
-//            d3.select("#wordcloud").append("svg")
-//                .attr("width", width)
-//                .attr("height", height)
-//              .append("g")
-//                .attr("transform", "translate("+width/2+","+(height/2+10)+")")
-//              .selectAll("text")
-//                .data(words)
-//              .enter().append("text")
-                // .style("font-family", function(d) {return "Impact"} )
-//                .style("font-size", function(d) { return d.size + "px"; })
-//                .style("fill", function(d) { return color.getColor(); })
-//                .attr("text-anchor", "middle")
-//                .attr("transform", function(d) {
-//                  return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-//                })
-//                .text(function(d) { return d.text; });
-//          }
-//        }
-=======
         fetchAndRotate = function(){
             fetch();
             if (cardQueue.length != 0) {
@@ -306,7 +213,6 @@
         setInterval(fetchAndRotate, 7000);
 
         
->>>>>>> master
      });
 	</script>
 	<body>
