@@ -19,7 +19,7 @@ top: 90px;
 time.timeago {
 	color: #888888; /* text color */
 		text-shadow: 0 1px 0 #fff; /* drop shadow */
-		font: bold 30px "Helvetica Neue";
+		font: bold 20px "Helvetica Neue";
 		position: absolute;
 		float: none;
 		display: block;
