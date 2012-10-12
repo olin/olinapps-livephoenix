@@ -1,0 +1,123 @@
+body {
+	margin: 0;
+	min-width: 1024px;
+	font-family: "Helvetica Neue", Helvetica, Arial, Helvetica, Geneva, sans-serif;
+	background: url(img/bg.png) repeat;
+	overflow-x: hidden;
+}
+
+div.card {
+	background: url(img/card_bg.png) no-repeat;
+	width: 742px;
+	height: 511px;
+	padding: 20px;
+position: absolute;
+display: block;
+top: 50px;
+}
+
+time.timeago {
+	color: #888888; /* text color */
+		text-shadow: 0 1px 0 #fff; /* drop shadow */
+		font: bold 20px "Helvetica Neue";
+		position: absolute;
+		float: none;
+		display: block;
+		width: 250px;
+		height: 25px;
+		top: 450px;
+	}
+
+div.tweet {
+	float: left;
+	display: inline-block;
+	width: 380px;
+	height: 440px;
+	padding: 20px;
+	
+	color: #2d416c; /* text color */
+	text-shadow: 0 1px 0 rgba(255,255,255,.75); /* drop shadow */
+	display: block;
+	font: bold 30px "Helvetica Neue";
+	overflow: hidden;
+}
+
+span.frame {
+	background-image: url(img/clip.png);
+	width: 95px;
+	height: 56px;
+	display: block;
+	z-index: 2;
+	position: relative;
+	top: 100px;
+	right: 27px;
+}
+
+div.avatar {
+	display: block;
+	position: relative;
+	bottom: 56px;
+}
+
+div.author_info {
+	float: left;
+	width: 265px;
+	display: inline-block;
+	height: 470px;
+	margin-right: 10px;
+	padding: 2px 20px 2px 2px;
+}
+
+img.profile_pic {
+	width: 203px;
+	height: 203px;
+	-webkit-transform:rotate(-2deg);
+	position: relative;
+	left: 10px;
+	top: -3px;
+	z-index: 0;
+}
+
+#cards div.card div.author_info p.name {
+	color: #49546c; /* text color */
+	text-shadow: 0 1px 0 #fff; /* drop shadow */
+	font: bold 30px "Helvetica Neue", Helvetica;
+
+	overflow: hidden;
+	visibility: visible;
+	margin: -25px 0 0;
+}
+
+#footer {
+	width: 826px;
+	height: 76px;
+	background: url(img/instructions.png) no-repeat;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	margin-bottom: 20px;
+	top: 600px;
+}
+
+#questions {
+
+	opacity: .7; /* layer alpha */
+	color: #003; /* text color */
+	text-align: left;
+	font: 26px "Helvetica Neue";
+	width: 420px;
+	float: right;
+	top: 22px;
+	position: relative;
+	left: 0;
+}
+
+#cards div.card div.author_info p.handle {
+	color: #888888; /* text color */
+	text-shadow: 0 1px 0 #fff; /* drop shadow */
+	font: bold 25px "Helvetica Neue";
+	margin-top: 10px;
+	overflow: hidden;
+}
+
+

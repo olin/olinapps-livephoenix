@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html>
+	<head>
+		<title>Live Phoenix</title>
+	</head>
+	<link rel="stylesheet" type="text/css" href="new_style.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="jqcloud.css" media="screen" />
+	<script src="lib/jquery.js"></script>
+  <script src="js/jquery-ui-1.9.0.custom.js"></script>
+  <script src="lib/d3.v2.min.js"></script>
+  <script src="lib/d3.layout.cloud.js"></script>
+	<script src="lib/timeago.js"></script>
+  <script src="lib/jqcloud-1.0.2.min.js"></script>
+	<script type='text/javascript'>
+			$(document).ready(function(){
+	        var searchType = "%23"; //%40
+	        var searchParam = "lol";
+	        var numToCycle = 5;
+	        var wordCloudList = [];
+	        
+	        window.questions = ["what are you passionate about?",
+	                            "what is your club doing?",
+	                            "what interests you?",
+	                            "what are you working on?",
+	                            "why are you happy today?",
+	                            "what makes olin awesome?"];
+	            
+	        function flipText(newText) {
+	          flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
+	              direction: "down"
+	          }, 300), $("#new-text").show("drop", {
+	              direction: "up"
+	          }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
+	              direction: "up"
+	          }, 300), $("#new-text").hide("drop", {
+	              direction: "down"
+	          }, 300));
+	          flipUp = !flipUp; // Alternating flipping direction
+	        }
+	    
+	        var interval = 4e3; // 4 seconds
+	        var flipUp = true;
+	        var index = 0;
+	        var maxIndex = window.questions.length - 1;
+	        setInterval(function() {
+	            var nextText = window.questions[index];
+	            flipText(nextText);
+	            index = (index == maxIndex) ? 0 : index + 1;
+	         }, interval);
+	   	 
+	        var CardDeck = function(anchor){
+	          this.anchor = anchor;
+	          this.minPos = -100;
+	          this.maxPos = -1530;
+	          var rotationSize = 900;
+	          this.firstIndex = 0;
+	          this.cards = new Array();
+	
+	          this.rotateCards = function(){
+	          	$('.timeago').timeago();
+	            var that = this;
+	            // add everything by the rotation size each time
+	            this.cards.forEach(function(card, index){
+	              // rotate the first card to the back
+	//              console.log(index,that.firstIndex)
+	                 console.log(card.text);
+	                card.updatePositionWithAnimation(card.position-rotationSize);
+	            });
+	              that.removeCard(0);
+	              if (that.firstIndex == (that.cards.length-1)) {
+	              that.firstIndex = -1;
+	            }
+	            that.firstIndex += 1;
+	          }
+	
+	          this.addCard = function(card){
+	            if (this.cards.length == 0){
+	              card.isFirst = true;
+	            }
+	
+	            if (this.anchor != "undefined") {
+	              card.render(this.anchor);
+	            }
+	
+	            card.updatePosition(this.maxPos);
+	            this.cards.push(card);
+	            this.maxPos += rotationSize;
+	          }
+	
+	          this.removeCard = function(position){
+	            if (this.cards.length > 0) {
+	              card = this.cards.splice(position, 1)[0];
+	              console.log(card);
+	              card.obj.remove();
+	              this.maxPos -= rotationSize;
+	            }
+	          }
+	        }
+	        cardDeck = new CardDeck($('#cards'));
+	        cardQueue = [];
+	
+	        var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
+	          this.obj;
+	          this.text = text;
+	          this.position = 0;
+	          this.updatePositionWithAnimation = function(position){
+	            this.position = position;
+	            this.obj.animate({'margin-left': this.position},500);
+	          }
+	          this.updatePosition = function(position){
+	            this.position = position;
+	            this.obj.css('margin-left', this.position);
+	          }
+	          this.firstCardSmoothTransition = function(position){
+	            this.position = position;
+	            this.obj.animate({'margin-left': -914},500,function(that) {return function(){
+	                that.obj.css('margin-left', position);
+	            }}(this));
+	          }
+	
+	          this.render = function(anchor){
+	            this.obj = ($('<div>')
+	              .attr('class', 'card').css('margin-left', 0 )).append($('<div>')
+	                .attr('class', 'author_info').append($('<div>')
+	                  .attr('class', 'avatar').append($('<span>')
+	                    .attr('class', 'frame'))
+	                  .append($('<img>').attr('class', 'profile_pic').attr('src', profile_image_url)
+	                    )
+	                  )
+	                .append($('<p>').attr('class', 'name').text(from_user_name))
+	                .append($('<p>').attr('class', 'handle').text("@"+from_user))
+	                .append($('<time>').attr('class', 'timeago').attr('datetime', created_at).text(created_at)))
+	              .append($('<div>').attr('class', 'tweet').text(text));
+	              
+	            anchor.append(this.obj);
+	          }
+	        }
+	
+	        function addCards() {
+	          $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+ searchType+searchParam, 
+	              function(data){
+	                var tweets = data.results;
+	                tweets.forEach(function(tweet, index){
+	                  var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
+	                    if (cardDeck.cards.length >= 4) {
+	                      cardQueue.unshift(card);
+	                      console.log("adding to queue", card);
+	                    } else {
+	                      cardDeck.addCard(card);
+	                      console.log("adding card deck", card);
+	                    }
+	                });
+	              }
+	            );
+	        }
+	        addCards();
+	
+	        // fetching api
+	        function fetch() {
+	          $.get('http://search.twitter.com/search.json?rpp='+10+'&q='+searchType+searchParam,
+	            function(data){
+	              var tweets = data.results;
+	              tweets.forEach(function(tweet, index){
+	                // check that it doesn't exist in the deck
+	                console.log((cardDeck.cards.filter(function(element, index) {
+	                    return element.text === tweet.text;
+	                }).length == 0 && cardQueue.filter(function(element, index) {
+	                    return element.text === tweet.text;
+	                })));
+	                if (cardDeck.cards.filter(function(element, index) {
+	                    return element.text === tweet.text;
+	                }).length == 0 && cardQueue.filter(function(element, index) {
+	                    return element.text === tweet.text;
+	                }).length == 0) {
+	                   // create a card
+	                  var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
+	                  cardQueue.push(card);
+	//                  console.log(card, cardDeck.cards, cardQueue);
+	//                  console.log("adding card");
+	                }
+	              });
+	
+	            }, 'json');
+	        }
+	
+	        fetchAndRotate = function(){
+	            fetch();
+	            if (cardQueue.length != 0) {
+	                card = cardQueue[0];
+	                cardQueue.splice(0, 1);
+	                cardDeck.addCard(card);
+	            }
+	            cardDeck.rotateCards();
+	        }
+					
+	        setInterval(fetchAndRotate, 7000);
+	
+	        
+	     });
+		</script>
+	<body>
+		
+		<div id="cards">
+		
+		</div>
+		
+		<div id="footer">
+			<div id="instructions">
+				<div id="questions">
+					<span id="dynamic-text-wrapper">
+					        <span id="old-text"></span>
+					        <span id="new-text"></span>
+					 </span>
+				</div>
+			</div>
+			
+			
+		</div>
+
+	</body>
+	<script>
+	$(function() {
+	  $('.card .timestamp').toRelativeTime();
+	  
+	  // Shortcut for multiple timestamps (call it with a selector)
+	  // $.toRelativeTime('.post .timestamp');
+	});
+	</script>
+</html>
