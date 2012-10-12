@@ -12,6 +12,7 @@
   <script src="lib/jqcloud-1.0.2.min.js"></script>
 	<script type='text/javascript'>
 		$(document).ready(function(){
+<<<<<<< HEAD
         var searchType = "%23"; //%40 for @, %23 for #
         var searchParam = "david";
         var numToCycle = 20;
@@ -22,35 +23,54 @@
    	    										"what are you working on?",
    	    										"why are you happy today?",
    	    										"what makes olin awesome?"];
-            
-            function flipText(newText) {
-                flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
-                    direction: "down"
-                }, 300), $("#new-text").show("drop", {
-                    direction: "up"
-                }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
-                    direction: "up"
-                }, 300), $("#new-text").hide("drop", {
-                    direction: "down"
-                }, 300));
-                flipUp = !flipUp; // Alternating flipping direction
-            }
+=======
+        var searchType = "%23"; //%40
+        var searchParam = "@jack";
+        var numToCycle = 5;
+        var wordCloudList = [];
         
-            var interval = 4e3; // 4 seconds
-            var flipUp = true;
-            var index = 0;
-            var maxIndex = window.questions.length - 1;
-            setInterval(function() {
-                var nextText = window.questions[index];
-                flipText(nextText);
-                index = (index == maxIndex) ? 0 : index + 1;
-             }, interval);
+        window.questions = ["what are you passionate about?",
+                            "what is your club doing?",
+                            "what interests you?",
+                            "what are you working on?",
+                            "why are you happy today?",
+                            "what makes olin awesome?"];
+>>>>>>> master
+            
+        function flipText(newText) {
+          flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
+              direction: "down"
+          }, 300), $("#new-text").show("drop", {
+              direction: "up"
+          }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
+              direction: "up"
+          }, 300), $("#new-text").hide("drop", {
+              direction: "down"
+          }, 300));
+          flipUp = !flipUp; // Alternating flipping direction
+        }
+    
+        var interval = 4e3; // 4 seconds
+        var flipUp = true;
+        var index = 0;
+        var maxIndex = window.questions.length - 1;
+        setInterval(function() {
+            var nextText = window.questions[index];
+            flipText(nextText);
+            index = (index == maxIndex) ? 0 : index + 1;
+         }, interval);
    	 
         var CardDeck = function(anchor){
           this.anchor = anchor;
+<<<<<<< HEAD
           this.minPos = -1000;
           this.maxPos = -1000;
           var rotationSize = 1300;
+=======
+          this.minPos = -416;
+          this.maxPos = -1332;
+          var rotationSize = 916;
+>>>>>>> master
           this.firstIndex = 0;
           this.cards = new Array();
 
@@ -61,6 +81,7 @@
             this.cards.forEach(function(card, index){
               // rotate the first card to the back
 //              console.log(index,that.firstIndex)
+<<<<<<< HEAD
               if (index == that.firstIndex) {
                 card.firstCardSmoothTransition(that.maxPos-rotationSize);
               } else if (index == ((that.firstIndex + 1)%(this.cards.length)) ||
@@ -70,8 +91,13 @@
               }else {
                 card.updatePosition(card.position-rotationSize);
               }
+=======
+                 console.log(card.text);
+                card.updatePositionWithAnimation(card.position-rotationSize);
+>>>>>>> master
             });
-            if (that.firstIndex == (that.cards.length-1)) {
+              that.removeCard(0);
+              if (that.firstIndex == (that.cards.length-1)) {
               that.firstIndex = -1;
             }
             that.firstIndex += 1;
@@ -81,21 +107,55 @@
             if (this.cards.length == 0){
               card.isFirst = true;
             }
-            card.create(this.anchor);
+
+            if (this.anchor != "undefined") {
+              card.render(this.anchor);
+            }
+
             card.updatePosition(this.maxPos);
             this.cards.push(card);
             this.maxPos += rotationSize;
           }
 
           this.removeCard = function(position){
-            this.cards.splice(position, 1);
+            if (this.cards.length > 0) {
+              card = this.cards.splice(position, 1)[0];
+              console.log(card);
+              card.obj.remove();
+              this.maxPos -= rotationSize;
+            }
           }
         }
+<<<<<<< HEAD
         var cards = new CardDeck($('#cards'));
+=======
+        cardDeck = new CardDeck($('#cards'));
+        cardQueue = [];
+
+        $.getRelativeTime = function(diff) {
+          var v = Math.floor(diff / 86400); diff -= v * 86400;
+          if (v > 0) return (v == 1 ? 'Yesterday' : v + ' days ago');
+          v = Math.floor(diff / 3600); diff -= v * 3600;
+          if (v > 0) return v + ' hour' + (v > 1 ? 's' : '') + ' ago';
+          v = Math.floor(diff / 60); diff -= v * 60;
+          if (v > 0) return v + ' minute' + (v > 1 ? 's' : '') + ' ago';
+          return 'Just now';
+        };
+
+        $.fn.toRelativeTime = function() {
+          var t = $(this), x = Math.round(Date.parse(t.text()) / 1000);
+          if (x) t.text($.getRelativeTime(Math.round(
+          new Date().getTime() / 1000) - x));
+        };
+
+        $.toRelativeTime = function(s) { $(s).each(function() { 
+          $(this).toRelativeTime(); 
+        }); };
+>>>>>>> master
 
         var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
           this.obj;
-					
+          this.text = text;
           this.position = 0;
           this.updatePositionWithAnimation = function(position){
             this.position = position;
@@ -112,7 +172,7 @@
             }}(this));
           }
 
-          this.create = function(anchor){
+          this.render = function(anchor){
             this.obj = ($('<div>')
               .attr('class', 'card').css('margin-left', 0 )).append($('<div>')
                 .attr('class', 'author_info').append($('<div>')
@@ -130,40 +190,59 @@
           
         }
 
+<<<<<<< HEAD
         cards = new CardDeck($('#cards'));
 				
+=======
+        function addCards() {
+          $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+ searchType+searchParam, 
+              function(data){
+                var tweets = data.results;
+                tweets.forEach(function(tweet, index){
+                  var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
+                    if (cardDeck.cards.length >= 4) {
+                      cardQueue.unshift(card);
+                      console.log("adding to queue", card);
+                    } else {
+                      cardDeck.addCard(card);
+                      console.log("adding card deck", card);
+                    }
+                });
+              }
+            );
+        }
+        addCards();
+
+>>>>>>> master
         // fetching api
-        $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+searchType+searchParam, 
-          function(data){
-            var tweets = data.results;
-            tweets.forEach(function(tweet, index){
-              // create a card for each one
-              var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
-
-              wordCloudList = wordCloudList.filter(function(element, index, array) {
-                return index==array.indexOf(element) && element != searchType+searchParam;
+        function fetch() {
+          $.get('http://search.twitter.com/search.json?rpp='+10+'&q='+searchType+searchParam,
+            function(data){
+              var tweets = data.results;
+              tweets.forEach(function(tweet, index){
+                // check that it doesn't exist in the deck
+                console.log((cardDeck.cards.filter(function(element, index) {
+                    return element.text === tweet.text;
+                }).length == 0 && cardQueue.filter(function(element, index) {
+                    return element.text === tweet.text;
+                })));
+                if (cardDeck.cards.filter(function(element, index) {
+                    return element.text === tweet.text;
+                }).length == 0 && cardQueue.filter(function(element, index) {
+                    return element.text === tweet.text;
+                }).length == 0) {
+                   // create a card
+                  var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
+                  cardQueue.push(card);
+//                  console.log(card, cardDeck.cards, cardQueue);
+//                  console.log("adding card");
+                }
               });
-//              console.log(wordCloudList);
-              cards.addCard(card);
-            });
-            // generateWordCloud();
-          }, 'json');
 
-        var ColorCycle = function(){
-          var colors = ['#545454', '#636363', '#707070', '#808080'];
-          var index = 1;
-
-          this.getColor = function() {
-            var color = colors[index-1];
-            if (index == colors.length) {
-              index = 1;
-            } else {
-              index++;
-            }
-            return color;
-          }
+            }, 'json');
         }
 
+<<<<<<< HEAD
         setInterval(function() {cards.rotateCards()}, 5000);
 
         // function generateWordCloud() {
@@ -213,6 +292,21 @@
 //                .text(function(d) { return d.text; });
 //          }
 //        }
+=======
+        fetchAndRotate = function(){
+            fetch();
+            if (cardQueue.length != 0) {
+                card = cardQueue[0];
+                cardQueue.splice(0, 1);
+                cardDeck.addCard(card);
+            }
+            cardDeck.rotateCards();
+        }
+
+        setInterval(fetchAndRotate, 7000);
+
+        
+>>>>>>> master
      });
 	</script>
 	<body>
