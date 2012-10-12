@@ -27,17 +27,17 @@
 	        function flipText(newText) {
 	          flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
 	              direction: "down"
-	          }, 300), $("#new-text").show("drop", {
+	          }, 200), $("#new-text").show("drop", {
 	              direction: "up"
-	          }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
+	          }, 200)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
 	              direction: "up"
-	          }, 300), $("#new-text").hide("drop", {
+	          }, 200), $("#new-text").hide("drop", {
 	              direction: "down"
-	          }, 300));
+	          }, 200));
 	          flipUp = !flipUp; // Alternating flipping direction
 	        }
 	    
-	        var interval = 6e3; // 4 seconds
+	        var interval = 5e3; // 4 seconds
 	        var flipUp = true;
 	        var index = 0;
 	        var maxIndex = window.questions.length - 1;
