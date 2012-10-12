@@ -12,6 +12,11 @@
   <script src="lib/jqcloud-1.0.2.min.js"></script>
 	<script type='text/javascript'>
 			$(document).ready(function(){
+			try {  
+			    netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");  
+			} catch (e) {  
+			    
+			}  
 	        var searchType = "%23"; //%40
 	        var searchParam = "livephoenix";
 	        var numToCycle = 15;
