@@ -41,11 +41,7 @@
 	        var flipUp = true;
 	        var index = 0;
 	        var maxIndex = window.questions.length - 1;
-	        setInterval(function() {
-	            var nextText = window.questions[index];
-	            flipText(nextText);
-	            index = (index == maxIndex) ? 0 : index + 1;
-	         }, interval);
+
 	   	 
 	        var CardDeck = function(anchor){
 	          this.anchor = anchor;
