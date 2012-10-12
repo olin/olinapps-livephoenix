@@ -18,34 +18,34 @@
         var wordCloudList = [];
         
         window.questions = ["what are you passionate about?",
-   	    										"what is your club doing?",
-   	    										"what interests you?",
-   	    										"what are you working on?",
-   	    										"why are you happy today?",
-   	    										"what makes olin awesome?"];
+                            "what is your club doing?",
+                            "what interests you?",
+                            "what are you working on?",
+                            "why are you happy today?",
+                            "what makes olin awesome?"];
             
-            function flipText(newText) {
-                flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
-                    direction: "down"
-                }, 300), $("#new-text").show("drop", {
-                    direction: "up"
-                }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
-                    direction: "up"
-                }, 300), $("#new-text").hide("drop", {
-                    direction: "down"
-                }, 300));
-                flipUp = !flipUp; // Alternating flipping direction
-            }
-        
-            var interval = 4e3; // 4 seconds
-            var flipUp = true;
-            var index = 0;
-            var maxIndex = window.questions.length - 1;
-            setInterval(function() {
-                var nextText = window.questions[index];
-                flipText(nextText);
-                index = (index == maxIndex) ? 0 : index + 1;
-             }, interval);
+        function flipText(newText) {
+          flipUp == true ? ($("#new-text").text(newText), $("#old-text").hide("drop", {
+              direction: "down"
+          }, 300), $("#new-text").show("drop", {
+              direction: "up"
+          }, 300)) : ($("#old-text").text(newText), $("#old-text").show("drop", {
+              direction: "up"
+          }, 300), $("#new-text").hide("drop", {
+              direction: "down"
+          }, 300));
+          flipUp = !flipUp; // Alternating flipping direction
+        }
+    
+        var interval = 4e3; // 4 seconds
+        var flipUp = true;
+        var index = 0;
+        var maxIndex = window.questions.length - 1;
+        setInterval(function() {
+            var nextText = window.questions[index];
+            flipText(nextText);
+            index = (index == maxIndex) ? 0 : index + 1;
+         }, interval);
    	 
         var CardDeck = function(anchor){
           this.anchor = anchor;
@@ -73,52 +73,52 @@
             that.firstIndex += 1;
           }
 
-          this.addCard = function(card, position){
-            console.log(position);
+          this.addCard = function(card){
             if (this.cards.length == 0){
               card.isFirst = true;
             }
-            card.create(this.anchor);
-            var posUpdate = typeof position !== "undefined" ? position : this.maxPos;
-            console.log(posUpdate);
-            card.updatePosition(posUpdate);
-            this.cards.push(card);
-            if (typeof position === "undefined") {
-              console.log("position", position);
-              this.maxPos += rotationSize;
+            if (this.anchor != "undefined") {
+              card.render(this.anchor);
             }
+            this.cards.push(card);
+            this.maxPos += rotationSize;
           }
 
           this.removeCard = function(position){
-            this.cards.splice(position, 1);
+            if (this.cards.length > 0) {
+              var card = this.cards[position];
+              this.cards.splice(position, 1);
+              card.obj.remove();
+              this.maxPos -= rotationSize;
+            }
           }
         }
         var cardDeck = new CardDeck($('#cards'));
+        var cardQueue = [];
 
-				$.getRelativeTime = function(diff) {
-				  var v = Math.floor(diff / 86400); diff -= v * 86400;
-				  if (v > 0) return (v == 1 ? 'Yesterday' : v + ' days ago');
-				  v = Math.floor(diff / 3600); diff -= v * 3600;
-				  if (v > 0) return v + ' hour' + (v > 1 ? 's' : '') + ' ago';
-				  v = Math.floor(diff / 60); diff -= v * 60;
-				  if (v > 0) return v + ' minute' + (v > 1 ? 's' : '') + ' ago';
-				  return 'Just now';
-				};
-				
-				$.fn.toRelativeTime = function() {
-				  var t = $(this), x = Math.round(Date.parse(t.text()) / 1000);
-				  if (x) t.text($.getRelativeTime(Math.round(
-				  new Date().getTime() / 1000) - x));
-				};
-				
-				$.toRelativeTime = function(s) { $(s).each(function() { 
-				  $(this).toRelativeTime(); 
-				}); };
-				
+        $.getRelativeTime = function(diff) {
+          var v = Math.floor(diff / 86400); diff -= v * 86400;
+          if (v > 0) return (v == 1 ? 'Yesterday' : v + ' days ago');
+          v = Math.floor(diff / 3600); diff -= v * 3600;
+          if (v > 0) return v + ' hour' + (v > 1 ? 's' : '') + ' ago';
+          v = Math.floor(diff / 60); diff -= v * 60;
+          if (v > 0) return v + ' minute' + (v > 1 ? 's' : '') + ' ago';
+          return 'Just now';
+        };
+
+        $.fn.toRelativeTime = function() {
+          var t = $(this), x = Math.round(Date.parse(t.text()) / 1000);
+          if (x) t.text($.getRelativeTime(Math.round(
+          new Date().getTime() / 1000) - x));
+        };
+
+        $.toRelativeTime = function(s) { $(s).each(function() { 
+          $(this).toRelativeTime(); 
+        }); };
+
         var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
           this.obj;
           this.text = text;
-					
           this.position = 0;
           this.updatePositionWithAnimation = function(position){
             this.position = position;
@@ -135,7 +135,7 @@
             }}(this));
           }
 
-          this.create = function(anchor){
+          this.render = function(anchor){
             this.obj = ($('<div>')
               .attr('class', 'card').css('margin-left', 0 )).append($('<div>')
                 .attr('class', 'author_info').append($('<div>')
@@ -152,15 +152,19 @@
           }
         }
 
-        cardDeck = new CardDeck($('#cards'));
-
         function addCards() {
           $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+ searchType+searchParam, 
               function(data){
                 var tweets = data.results;
                 tweets.forEach(function(tweet, index){
                   var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
+                    if (cardDeck.cards.length >= 3) {
+                      cardQueue.unshift(card);
+                      console.log("adding to queue", card);
+                    } else {
                       cardDeck.addCard(card);
+                      console.log("adding card deck", card);
+                    }
                 });
               }
             );
@@ -174,102 +178,34 @@
               var tweets = data.results;
               tweets.forEach(function(tweet, index){
                 // check that it doesn't exist in the deck
-                var test = cardDeck.cards.filter(function(element, index) {
-                    return element.text == tweet.text;
-                });
-                console.log(test);
-                if (test.length == 0) {
+                if (cardDeck.cards.filter(function(element, index) {
+                    return element.text === tweet.text;
+                }).length == 0 && cardQueue.filter(function(element, index) {
+                    return element.text === tweet.text;
+                }).length == 0) {
                    // create a card
                   var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
-                  cardDeck.addCard(card);
-
+                  cardQueue.push(card);
+                  console.log(card, cardDeck.cards, cardQueue);
                   console.log("adding card");
-
-                  // if (cardDeck.cards.length >= numToCycle) {
-                  //   // remove the first in the deck and add this new one
-                  //   //var removed = cardDeck.cards.splice(0, 1);
-                  // } else {
-                  //   cardDeck.addCard(card);
-                  // }
-                 
-                  // wordCloudList = wordCloudList.filter(function(element, index, array) {
-                  //   return index==array.indexOf(element) && element != searchType+searchParam;
-                  // });
                 }
               });
 
-              // generateWordCloud();
             }, 'json');
         }
 
-        //fetch();
         setInterval(function() { 
           fetch();
+          if (cardQueue.length != 0) {
+            var card = cardQueue[0];
+            cardQueue.splice(0, 1);
+            cardDeck.removeCard(0);
+            cardDeck.addCard(card);
+          }
           cardDeck.rotateCards();
         }, 5000);
 
-        // function generateWordCloud() {
-        //   $(function() {
-        //     $("#wordcloud").jQCloud(wordCloudList.map(function(element){
-        //       return {text: element, weight: Math.random() * 10};
-        //     }), {shape: "rectangular"});
-        //   });
-        // }
-
-        // var ColorCycle = function(){
-        //   var colors = ['#545454', '#636363', '#707070', '#808080'];
-        //   var index = 1;
-
-        //   this.getColor = function() {
-        //     var color = colors[index-1];
-        //     if (index == colors.length) {
-        //       index = 1;
-        //     } else {
-        //       index++;
-        //     }
-        //     return color;
-        //   }
-        // }
-
-        // function generateWordCloud() {
-        //   // word cloud
-        //   var color = new ColorCycle();
-        //   var wordCloudList = ["Hello", "world", "normally", "you", "want", "more", "words",
-        // "than", "this", "Hello", "world", "normally", "you", "want", "more", "words",
-        // "than"];
-        //   var width = 1400;
-        //   var height = 150;
-        //   d3.layout.cloud().size([width, height])
-        //     // .text(function(d) { return d.key; })
-        //     // .size(function(d) { return 10; })
-        //     .words(
-        //       wordCloudList.map(function(d) {
-        //       return {text: d, size: 30};
-        //     }))
-        //     .rotate(function() { return 0;}) // ~~(Math.random() * 2) * 90;
-        //     .fontSize(function(d) { return d.size; })
-        //     .on("end", draw)
-        //     .start();
-
-        //   function draw(words) {
-        //     d3.select("#wordcloud").append("svg")
-        //         .attr("width", width)
-        //         .attr("height", height)
-        //       .append("g")
-        //         .attr("transform", "translate("+width/2+","+(height/2+10)+")")
-        //       .selectAll("text")
-        //         .data(words)
-        //       .enter().append("text")
-        //         // .style("font-family", function(d) {return "Impact"} )
-        //         .style("font-size", function(d) { return d.size + "px"; })
-        //         .style("fill", function(d) { return color.getColor(); })
-        //         .attr("text-anchor", "middle")
-        //         .attr("transform", function(d) {
-        //           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        //         })
-        //         .text(function(d) { return d.text; });
-        //   }
-        // }
+        
      });
 	</script>
 	<body>
