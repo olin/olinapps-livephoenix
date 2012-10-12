@@ -13,7 +13,7 @@ div.card {
 	padding: 20px;
 position: absolute;
 display: block;
-top: 70px;
+top: 90px;
 }
 
 time.timeago {
@@ -96,7 +96,7 @@ img.profile_pic {
 	margin-right: auto;
 	position: relative;
 	margin-bottom: 20px;
-	top: 650px;
+	top: 750px;
 }
 
 #questions {
