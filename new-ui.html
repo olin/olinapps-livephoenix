@@ -76,7 +76,9 @@
 	              // rotate the first card to the back
 	//              console.log(index,that.firstIndex)
 	                 //console.log(card.text);
-	                card.updatePositionWithAnimation(card.position-rotationSize);  //TODO: fix anim speed
+
+                        card.updatePositionWithAnimation(card.position - rotationSize, -rotationSize);  //TODO: fix anim speed
+                        //card.updatePositionWithAnimation(card.position-rotationSize);  //TODO: fix anim speed
 	            });
 	              that.removeCard(0);
 	              if (that.firstIndex == (that.cards.length-1)) {
@@ -112,23 +114,27 @@
 	        cardQueue = [];
 
 	        var Card = function(text, created_at, from_user_name, from_user, profile_image_url){
-	          this.obj;
+	          //this.obj;
 	          this.text = text;
 	          this.position = 0;
-	          this.updatePositionWithAnimation = function(position){
+	          this.updatePositionWithAnimation = function(position, delta){
 	            this.position = position;
-	            this.obj.animate({'margin-left': this.position},500);
+	            //this.obj.animate({'margin-left': this.position},500); // Old animation code
+                    // This should be cleaned up:
+                    this.obj.css('margin-left', this.position - delta); // This might be unnecessary if margin-left were not used to control stuff.
+                    this.obj.css('webkitTransform','translateX('+delta+'px)'); // This is where the animation happens
+                    this.obj.css('-webkit-transition','all 200ms cubic-bezier(0.115, 0.515, 0.950, 1.110)');
 	          }
 	          this.updatePosition = function(position){
 	            this.position = position;
 	            this.obj.css('margin-left', this.position);
 	          }
-	          this.firstCardSmoothTransition = function(position){
+	          /*this.firstCardSmoothTransition = function(position){
 	            this.position = position;
 	            this.obj.animate({'margin-left': -914},500,function(that) {return function(){
 	                that.obj.css('margin-left', position);
 	            }}(this));
-	          }
+	          }*/
 
 	          this.render = function(anchor){
 	            this.obj = ($('<div>')
