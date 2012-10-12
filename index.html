@@ -13,7 +13,7 @@
 	<script type='text/javascript'>
 		$(document).ready(function(){
         var searchType = "%23"; //%40
-        var searchParam = "testing";
+        var searchParam = "@jack";
         var numToCycle = 5;
         var wordCloudList = [];
         
@@ -50,7 +50,7 @@
         var CardDeck = function(anchor){
           this.anchor = anchor;
           this.minPos = -416;
-          this.maxPos = -416;
+          this.maxPos = -1332;
           var rotationSize = 916;
           this.firstIndex = 0;
           this.cards = new Array();
@@ -61,13 +61,11 @@
             this.cards.forEach(function(card, index){
               // rotate the first card to the back
 //              console.log(index,that.firstIndex)
-              if (index == that.firstIndex) {
-                card.firstCardSmoothTransition(that.maxPos-rotationSize);
-              } else {
+                 console.log(card.text);
                 card.updatePositionWithAnimation(card.position-rotationSize);
-              }
             });
-            if (that.firstIndex == (that.cards.length-1)) {
+              that.removeCard(0);
+              if (that.firstIndex == (that.cards.length-1)) {
               that.firstIndex = -1;
             }
             that.firstIndex += 1;
@@ -77,24 +75,27 @@
             if (this.cards.length == 0){
               card.isFirst = true;
             }
+
             if (this.anchor != "undefined") {
               card.render(this.anchor);
             }
+
+            card.updatePosition(this.maxPos);
             this.cards.push(card);
             this.maxPos += rotationSize;
           }
 
           this.removeCard = function(position){
             if (this.cards.length > 0) {
-              var card = this.cards[position];
-              this.cards.splice(position, 1);
+              card = this.cards.splice(position, 1)[0];
+              console.log(card);
               card.obj.remove();
               this.maxPos -= rotationSize;
             }
           }
         }
-        var cardDeck = new CardDeck($('#cards'));
-        var cardQueue = [];
+        cardDeck = new CardDeck($('#cards'));
+        cardQueue = [];
 
         $.getRelativeTime = function(diff) {
           var v = Math.floor(diff / 86400); diff -= v * 86400;
@@ -158,7 +159,7 @@
                 var tweets = data.results;
                 tweets.forEach(function(tweet, index){
                   var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
-                    if (cardDeck.cards.length >= 3) {
+                    if (cardDeck.cards.length >= 4) {
                       cardQueue.unshift(card);
                       console.log("adding to queue", card);
                     } else {
@@ -173,11 +174,16 @@
 
         // fetching api
         function fetch() {
-          $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+searchType+searchParam, 
+          $.get('http://search.twitter.com/search.json?rpp='+10+'&q='+searchType+searchParam,
             function(data){
               var tweets = data.results;
               tweets.forEach(function(tweet, index){
                 // check that it doesn't exist in the deck
+                console.log((cardDeck.cards.filter(function(element, index) {
+                    return element.text === tweet.text;
+                }).length == 0 && cardQueue.filter(function(element, index) {
+                    return element.text === tweet.text;
+                })));
                 if (cardDeck.cards.filter(function(element, index) {
                     return element.text === tweet.text;
                 }).length == 0 && cardQueue.filter(function(element, index) {
@@ -186,24 +192,25 @@
                    // create a card
                   var card = new Card(tweet.text, tweet.created_at, tweet.from_user_name, tweet.from_user, tweet.profile_image_url.replace("_normal", ""));
                   cardQueue.push(card);
-                  console.log(card, cardDeck.cards, cardQueue);
-                  console.log("adding card");
+//                  console.log(card, cardDeck.cards, cardQueue);
+//                  console.log("adding card");
                 }
               });
 
             }, 'json');
         }
 
-        setInterval(function() { 
-          fetch();
-          if (cardQueue.length != 0) {
-            var card = cardQueue[0];
-            cardQueue.splice(0, 1);
-            cardDeck.removeCard(0);
-            cardDeck.addCard(card);
-          }
-          cardDeck.rotateCards();
-        }, 5000);
+        fetchAndRotate = function(){
+            fetch();
+            if (cardQueue.length != 0) {
+                card = cardQueue[0];
+                cardQueue.splice(0, 1);
+                cardDeck.addCard(card);
+            }
+            cardDeck.rotateCards();
+        }
+
+        setInterval(fetchAndRotate, 7000);
 
         
      });
