@@ -19,7 +19,7 @@ top: 90px;
 time.timeago {
 	color: #888888; /* text color */
 		text-shadow: 0 1px 0 #fff; /* drop shadow */
-		font: bold 20px "Helvetica Neue";
+		font: bold 40px "Helvetica Neue";
 		position: absolute;
 		float: none;
 		display: block;
@@ -81,7 +81,7 @@ img.profile_pic {
 #cards div.card div.author_info p.name {
 	color: #49546c; /* text color */
 	text-shadow: 0 1px 0 #fff; /* drop shadow */
-	font: bold 30px "Helvetica Neue", Helvetica;
+	font: bold 60px "Helvetica Neue", Helvetica;
 
 	overflow: hidden;
 	visibility: visible;
@@ -115,7 +115,7 @@ img.profile_pic {
 #cards div.card div.author_info p.handle {
 	color: #888888; /* text color */
 	text-shadow: 0 1px 0 #fff; /* drop shadow */
-	font: bold 25px "Helvetica Neue";
+	font: bold 50px "Helvetica Neue";
 	margin-top: 10px;
 	overflow: hidden;
 }
