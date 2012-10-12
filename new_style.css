@@ -38,7 +38,7 @@ div.tweet {
 	color: #2d416c; /* text color */
 	text-shadow: 0 1px 0 rgba(255,255,255,.75); /* drop shadow */
 	display: block;
-	font: bold 50px "Helvetica Neue";
+	font: bold 45px "Helvetica Neue";
 	overflow: hidden;
 }
 
