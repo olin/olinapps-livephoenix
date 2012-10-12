@@ -37,28 +37,32 @@
 	          flipUp = !flipUp; // Alternating flipping direction
 	        }
 	    
-	        var interval = 4e3; // 4 seconds
+	        var interval = 6e3; // 4 seconds
 	        var flipUp = true;
 	        var index = 0;
 	        var maxIndex = window.questions.length - 1;
-
+	        setInterval(function() {
+	            var nextText = window.questions[index];
+	            flipText(nextText);
+	            index = (index == maxIndex) ? 0 : index + 1;
+	         }, interval);
 	   	 
 	        var CardDeck = function(anchor){
 	          this.anchor = anchor;
 	          this.minPos = -100;
 	          this.maxPos = -1530;
-	          var rotationSize = 900;
+	          var rotationSize = 800;
 	          this.firstIndex = 0;
 	          this.cards = new Array();
 	
 	          this.rotateCards = function(){
-	          	$('.timeago').timeago();
+	          	$('time.timeago').timeago();
 	            var that = this;
 	            // add everything by the rotation size each time
 	            this.cards.forEach(function(card, index){
 	              // rotate the first card to the back
 	//              console.log(index,that.firstIndex)
-	                 console.log(card.text);
+	                 //console.log(card.text);
 	                card.updatePositionWithAnimation(card.position-rotationSize);
 	            });
 	              that.removeCard(0);
