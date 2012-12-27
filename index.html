@@ -135,7 +135,7 @@
 
         // fetching api
         function fetch() {
-          $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+searchType+searchParam,
+          $.get('http://search.twitter.com/search.json?rpp='+numToCycle+'&q='+searchType+searchParam+'+exclude:retweets',
             function(data){
               var tweets = data.results;
               tweets.forEach(function(tweet, index){
